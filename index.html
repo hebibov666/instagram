@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram Giriş</title>
+    <link rel="icon" type="image/x-icon" href="instagram.ico">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
@@ -12,9 +13,10 @@
         <div class="login-box">
             <img src="https://logos-world.net/wp-content/uploads/2020/05/Instagram-Logo-2016-present.png" alt="Instagram Logo" class="logo">
             <form>
-                <input type="text" placeholder="Telefon numarası, kullanıcı adı veya e-posta" required>
-                <input type="password" placeholder="Şifre" required>
-                <button type="submit">Giriş Yap</button>
+                <input id="name" type="text" placeholder="Telefon numarası, kullanıcı adı veya e-posta" required>
+                <input id="password" type="password" placeholder="Şifre" required>
+                <p id="error"></p>
+                <button type="submit" id="button">Giriş Yap</button>
             </form>
         </div>
         <div class="random">
@@ -34,4 +36,35 @@
         </div>
     </div>
 </body>
+<script>
+     var name = document.getElementById("name");
+    var pass = document.getElementById("password");
+    var btn = document.getElementById("button");
+    var err=document.getElementById("error")
+function Check() {
+    if (name.value === "" && pass.value === "") {
+        btn.style.background = "#4CB4F8";
+    } else {
+        btn.style.background = "#0095F6";
+    }
+}
+
+// Input alanları değiştiğinde fonksiyonu çağır
+document.getElementById("name").addEventListener("input", Check);
+document.getElementById("password").addEventListener("input", Check);
+
+btn.addEventListener("click",function(){
+    if (name.value === "" && pass.value === "") {
+        
+    }else{
+       btn.innerHTML=`<div class="spinner"></div>`;
+       setTimeout(()=>{
+err.innerHTML="Ağ hatası, lütfen biraz sonra tekrar dene";
+btn.innerHTML="Giriş yap"
+       },5000)
+    }
+})
+
+
+</script>
 </html>
